@@ -1,0 +1,609 @@
+{
+  "name": "EOCR-11Labs",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "69f6e2dd-5f99-4347-b6a1-b147f15904c2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -752,
+        240
+      ],
+      "id": "efd4632f-1c0d-4d0f-803a-16235043c7bd",
+      "name": "Webhook",
+      "webhookId": "69f6e2dd-5f99-4347-b6a1-b147f15904c2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "9b7396b7-3a01-4016-adc4-9c4c3f529585",
+              "leftValue": "={{ $json.body.data.analysis.data_collection_results['patient type'].value }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "855773f5-a073-44b0-a6f8-497de862f18f",
+              "leftValue": "={{ $json.body.data.analysis.data_collection_results['patient type'].value }}",
+              "rightValue": "null",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -544,
+        240
+      ],
+      "id": "0b80a0e9-9a7e-4bb7-add1-1cf210489407",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.data.analysis.data_collection_results['patient type'].value }}",
+                    "rightValue": "new",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "f7545f84-e4a6-4a9c-bd80-91dc6ac867aa"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "new patient"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d308638d-6185-4c2f-a189-abc8c92f159b",
+                    "leftValue": "={{ $json.body.data.analysis.data_collection_results['patient type'].value }}",
+                    "rightValue": "existing",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "existing patient"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "138b1d0a-1122-4a65-bad0-98948eacb450",
+                    "leftValue": "={{ $json.body.data.analysis.data_collection_results['patient type'].value }}",
+                    "rightValue": "null",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "null patient"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -288,
+        128
+      ],
+      "id": "21af5ddc-b8a6-4dc3-b392-437f7807f644",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "O0DsSdda0wp1nAUV",
+          "mode": "list",
+          "cachedResultName": "Dental Data (Contacts)",
+          "cachedResultUrl": "/projects/CXjEVB8uJlC2H5WK/datatables/O0DsSdda0wp1nAUV"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "name": "={{ $json.body.data.analysis.data_collection_results.name.value}}",
+            "phone_number": "={{ $json.body.data.analysis.data_collection_results.phone.value }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "phone_number",
+              "displayName": "phone_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9bed375b-9c46-4136-bc33-d78ddf2ff23f",
+      "name": "Insert Contact"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "DZ9sc7Rs1eWyuXl3",
+          "mode": "list",
+          "cachedResultName": "Dental Data (interactions)",
+          "cachedResultUrl": "/projects/CXjEVB8uJlC2H5WK/datatables/DZ9sc7Rs1eWyuXl3"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "transcript": "={{ $('Switch').item.json.body.data.analysis.transcript_summary }}",
+            "type": "={{ $('Switch').item.json.body.data.analysis.data_collection_results.type.value }}",
+            "contact": "={{ $json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "contact",
+              "displayName": "contact",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "transcript",
+              "displayName": "transcript",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "fd7a6745-3649-48ba-942e-05b5e0e70a1b",
+      "name": "Insert Interaction"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "DZ9sc7Rs1eWyuXl3",
+          "mode": "list",
+          "cachedResultName": "Dental Data (interactions)",
+          "cachedResultUrl": "/projects/CXjEVB8uJlC2H5WK/datatables/DZ9sc7Rs1eWyuXl3"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "transcript": "={{ $('Switch').item.json.body.data.analysis.transcript_summary }}",
+            "type": "={{ $('Switch').item.json.body.data.analysis.data_collection_results.type.value }}",
+            "contact": "={{ $json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "contact",
+              "displayName": "contact",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "transcript",
+              "displayName": "transcript",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        208,
+        160
+      ],
+      "id": "cd11f2cd-11b0-4b48-be2d-9561f2008c87",
+      "name": "Insert Interaction1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        0,
+        352
+      ],
+      "id": "30e5a9ac-840e-40e0-8419-c98fb3d6f457",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "O0DsSdda0wp1nAUV",
+          "mode": "list",
+          "cachedResultName": "Dental Data (Contacts)",
+          "cachedResultUrl": "/projects/CXjEVB8uJlC2H5WK/datatables/O0DsSdda0wp1nAUV"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "phone_number",
+              "keyValue": "={{ $json.body.data.metadata.phone_call.external_number }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        0,
+        160
+      ],
+      "id": "8660a155-894e-4976-8ce9-c16bd97bc75c",
+      "name": "Get Contact"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "5e701c81-dd5e-49d0-88f3-e311ab8e8f31",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -784,
+        704
+      ],
+      "id": "2f85084a-333f-4768-aa1d-eb3ad0f267fd",
+      "name": "Webhook1",
+      "webhookId": "5e701c81-dd5e-49d0-88f3-e311ab8e8f31"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "O0DsSdda0wp1nAUV",
+          "mode": "list",
+          "cachedResultName": "Dental Data (Contacts)",
+          "cachedResultUrl": "/projects/CXjEVB8uJlC2H5WK/datatables/O0DsSdda0wp1nAUV"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "phone_number",
+              "keyValue": "={{ $json.body.phone_number }}"
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -544,
+        704
+      ],
+      "id": "41cb9a16-3088-4c89-ac17-c7a31638e648",
+      "name": "Get Contact1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1e0f7623-32b0-40c0-a66b-bbd6cff5f316",
+              "leftValue": "={{ $json.name }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -336,
+        704
+      ],
+      "id": "c753c1fa-afe3-4ba9-a486-f1ef3015e54c",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"customer_name\": \"{{ json.name }}\",\n}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -128,
+        608
+      ],
+      "id": "ae005d30-b0fe-4bdb-8d13-c148bf8914e1",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseCode": 404
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -128,
+        800
+      ],
+      "id": "991b0cdc-51c7-4581-a554-0dd6d9284c2f",
+      "name": "Respond to Webhook1"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Insert Contact",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Contact",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Contact": {
+      "main": [
+        [
+          {
+            "node": "Insert Interaction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Contact": {
+      "main": [
+        [
+          {
+            "node": "Insert Interaction1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Get Contact1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Contact1": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 2,
+  "meta": null
+}
