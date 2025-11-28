@@ -41,5 +41,6 @@ An end-to-end **AI voice receptionist** that automates patient calls, identifies
 
 ## 📸 **Screenshots**
 
-
+![Workflow](screenshots/n8n.png)
+![ElevenLabs](screenshots/elevenlabs.png)
 
